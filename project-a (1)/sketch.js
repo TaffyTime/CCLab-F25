@@ -92,11 +92,9 @@ function MoldOrb() {
     console.log(brightness)
     
     //BREATHING and DYING
-    counter++;
+   counter++;
     if (mouseIsPressed && (mouseX > x-150) && (mouseX < x+150) && (mouseY > y-150) && (mouseY < y+150)){counter = 0}
-    if(counter<500){b = lerp(0.05,0.3,0.1)}
-    if(counter>500 && counter<1000){b = lerp(0.3,0.05,0.1) }
-    else{b=0.05}
+    if(counter<1000){b = 0.3}else{b=0.05}
      
     
   }
