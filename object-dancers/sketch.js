@@ -45,8 +45,8 @@ class PumpkinMan {
     // update properties here to achieve
     // your dancer's desired moves and behaviour
     //body 
-    this.y = height / 2 + map(sin(2 * frameCount * 0.1), -1, 1, -50, 50);
-    this.x = width / 2 + map(cos(frameCount * 0.1), -1, 1, -50, 50);
+    this.y = height / 2 + 50 * sin(2 * frameCount * 0.1);
+    this.x = width / 2 + 50 * cos(frameCount * 0.1)
   }
   display() {
     // the push and pop, along with the translate 
