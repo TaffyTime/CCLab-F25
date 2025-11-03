@@ -36,6 +36,8 @@ class PumpkinMan {
   constructor(startX, startY) {
     this.x = startX;
     this.y = startY;
+    this.angle = 0;
+    this.speedA = 0.1;
 
     //..
     //..
@@ -47,6 +49,10 @@ class PumpkinMan {
     //body 
     this.y = height / 2 + 50 * sin(2 * frameCount * 0.1);
     this.x = width / 2 + 50 * cos(frameCount * 0.1)
+    this.angle = this.angle + this.speedA;
+    if (mouseIsPressed) {
+      this.speedA = -this.speedA;
+    }
   }
   display() {
     // the push and pop, along with the translate 
@@ -103,18 +109,35 @@ class PumpkinMan {
     circle(20, -20, 30)
 
     //left pupil
+    // push()
+    // translate(-20, -20)
+    // fill(100)
+    // circle(10 * cos(-frameCount * 0.1), 10 * sin(-frameCount * 0.1), 10)
+    // pop()
+
+    //left pupil
     push()
-    translate(-20, -20)
+    translate(-20, -20);
+    rotate(this.angle);
     fill(100)
-    circle(10 * cos(-frameCount * 0.1), 10 * sin(-frameCount * 0.1), 10)
-    pop()
+    circle(10, 0, 10)
+    pop();
 
     //right pupil
     push()
-    translate(20, -20)
+    translate(20, -20);
+    rotate(-this.angle);
     fill(100)
-    circle(10 * cos(frameCount * 0.1), 10 * sin(frameCount * 0.1), 10)
-    pop()
+    circle(10, 0, 10)
+    pop();
+
+
+    // //right pupil
+    // push()
+    // translate(20, -20)
+    // fill(100)
+    // circle(10 * cos(frameCount * 0.1), 10 * sin(frameCount * 0.1), 10)
+    // pop()
 
     //mouth
     // noFill()
