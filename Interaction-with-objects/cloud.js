@@ -8,6 +8,7 @@ class Cloud {
         this.speedX = map(this.s, 50, 100, 3, 0.5);
         this.speedY = map(this.s, 50, 100, 0.02, 0.005);
         this.h = random(100);
+        this.isRaining = false
     }
     //methods are the functions
     display() {
@@ -15,6 +16,7 @@ class Cloud {
         translate(this.x, this.y);
 
         //arm left
+        stroke(0)
         beginShape();
         let lineLength = this.s * 0.5;
         noFill();
@@ -26,6 +28,7 @@ class Cloud {
         endShape();
 
         //arm right
+
         push();
         scale(-1, 1);
         beginShape();
@@ -67,10 +70,12 @@ class Cloud {
         let d = dist(this.x, this.y, other.x, other.y);
         if (d < (this.s + other.s) / 2) {
             this.h = random(100);
+            this.isRaining = true
             if (sound.isPlaying() == false) {
                 sound.play();
             }
-        }
+
+        } else { this.isRaining = false }
     }
     isOut() {
         if (this.x > width + this.s * 2) {

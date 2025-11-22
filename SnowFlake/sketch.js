@@ -35,7 +35,7 @@ class SnowFlake {
     this.swayX = map(this.s, 10, 100, 0.1, 0.05)
     this.speedY = map(this.s, 10, 100, 0.8, 2)
     this.ampY = map(this.s, 10, 100, 10, 20)
-    this.sq = map(this.s, 10, 100, 5, 15)
+    //this.sq = map(this.s, 10, 100, 5, 15)
     this.opacity = map(this.s, 10, 100, 20, 100)
   }
 
