@@ -28,7 +28,7 @@ class Mermaid {
     this.angle1 = 0
     this.angle2 = 0
     this.angle3 = 0
-    this.color = cam.get(mouseX, mouseY);
+    this.color = 0
     this.eliwi = eliwi
     this.elihi = eliwi / 3
   }

@@ -67,7 +67,8 @@ function mousePressed() {
 }
 
 function draw() {
-  console.log(handnumber)
+  //console.log(handnumber)
+
   //frequency indicator mechanic and image
   let spectrum = fft.analyze();
   n++;
@@ -77,7 +78,9 @@ function draw() {
   }
   let rectpitch = map(spectrum[n], 0, 255, 0, 200);
 
+
   image(video, 0, 0);
+  filter(GRAY)
 
   //setting arrayed for loops for rectangle, flower, and then pointy brush, and splicing them
   for (let i = rectangle.length - 1; i >= 0; i--) {
