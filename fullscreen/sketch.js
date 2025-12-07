@@ -1,5 +1,3 @@
-
-
 let handPose;
 let video
 let hands = [];
@@ -18,11 +16,13 @@ let pointer = []
 let n = 0;
 let pitch
 let flowersize
-let rectanglesizer = 400
+let rectanglesizer = 0
 let life = 15000
 let handnumber = 1
 
 let shape = rectangle;
+let dragRect = false;
+let rx, ry;
 let a = 0;
 
 function preload() {
@@ -30,10 +30,12 @@ function preload() {
 }
 
 function setup() {
-  let canvas = createCanvas(800, 500);
+  // keep these 3 lines as they are
+  let canvas = createCanvas(windowWidth, windowHeight);
+  canvas.id("p5-canvas");
   canvas.parent("p5-canvas-container");
 
-  //audio detection
+  //use camera and hide image
   mic = new p5.AudioIn();
   mic.start();
   fft = new p5.FFT()
@@ -41,9 +43,11 @@ function setup() {
 
   //use videoera and hide image
   video = createCapture(VIDEO)
-  video.size(640, 480)
+  video.size((640 / 800) * windowWidth, (480 / 500) * windowHeight)
   video.hide()
 
+  ry = (300 / 500) * windowHeight + 100 - rectanglesizer;
+  rx = (720 / 800) * windowWidth;
   // Start detecting hands from the webcam video
   handPose.detectStart(video, gotHands);
 
@@ -79,6 +83,12 @@ function HandSignals() {
       abs(thumbTip.x - indexTip.x) < 30
     ) {
       handnumber = 1
+      push()
+      colorMode(HSB, 100)
+      textSize(60);
+      stroke(145, 220, 255)
+      text("1", video.width - indexTip.x, indexTip.y);
+      pop()
     }
     //check handsignal for 2
     if (
@@ -90,6 +100,12 @@ function HandSignals() {
       d2 > 120
     ) {
       handnumber = 2
+      push()
+      colorMode(HSB, 100)
+      textSize(60);
+      stroke(145, 220, 255)
+      text("2", video.width - indexTip.x, indexTip.y);
+      pop()
     }
 
     //check handsignal for 3
@@ -102,12 +118,16 @@ function HandSignals() {
       d3 > 120
     ) {
       handnumber = 3
+      push()
+      colorMode(HSB, 100)
+      textSize(60);
+      stroke(145, 220, 255)
+      text("3", video.width - indexTip.x, indexTip.y);
+      pop()
     }
   }
 }
 
-
-//functions to make the shapes to draw, depending on what brushnumber
 function drawShape(shape, a) {
   for (let i = a; i < shape.length; i++) {
     shape[i].display();
@@ -122,12 +142,13 @@ function drawShape(shape, a) {
 function mousePressed() {
   a = shape.length;
 }
+function mouseReleased() {
+  dragRect = false;
+}
 
 function draw() {
-  HandSignals()
-  //console.log(handnumber)
 
-  //frequency indicator mechanic and image
+  //frequency indicator
   let spectrum = fft.analyze();
   n++;
   pitch = spectrum[n];
@@ -143,7 +164,7 @@ function draw() {
   filter(GRAY)
   pop()
 
-  //setting arrayed for loops for rectangle, flower, and then pointy brush, and splicing them
+  //setting arrayed for loops for rectangle, flower, and then pointy brush
   for (let i = rectangle.length - 1; i >= 0; i--) {
     rectangle[i].display()
     rectangle[i].update()
@@ -167,11 +188,11 @@ function draw() {
     }
   }
 
-  //nested if statement to actually draw objects
+  //nested if statement to actually draw and splice and objects
   if (mouseIsPressed) {
     //rectangle brush
     if (paintbrush == 1) {
-      let rctsize = map(rectanglesizer, 200, 400, 50, 10)
+      let rctsize = map(ry, (300 / 500) * windowHeight - 100, (300 / 500) * windowHeight + 100, 75, 10)
       rectangle.push(new brush1(mouseX, mouseY, rctsize))
       shape = rectangle;
     }
@@ -195,14 +216,13 @@ function draw() {
 
   drawShape(shape, a);
 
-
   //screen frame
   noStroke()
   fill(0)
   //horizontal
-  rect(0, 480, width, 20)
+  rect(0, (24 / 25) * height, width, height)
   //vertical
-  rect(640, 0, 160, height)
+  rect((4 / 5) * width, 0, width, height)
 
   //brush buttons
   push()
@@ -211,19 +231,23 @@ function draw() {
   let scaler1 = 0
   let scaler2 = 0
   let scaler3 = 0
-  if (mouseX > 660 && mouseX < 680 && mouseY > 20 && mouseY < 40) { scaler1 = 10 }
-  if (mouseX > 660 && mouseX < 680 && mouseY > 70 && mouseY < 90) { scaler2 = 10 }
-  if (mouseX > 660 && mouseX < 680 && mouseY > 120 && mouseY < 140) { scaler3 = 10 }
+
+  //button 1
+  if (mouseX > (660 / 800) * windowWidth && mouseX < (680 / 800) * windowWidth && mouseY > (20 / 500) * windowHeight && mouseY < (40 / 500) * windowHeight) { scaler1 = 10 }
+  //button 2
+  if (mouseX > (660 / 800) * windowWidth && mouseX < (680 / 800) * windowWidth && mouseY > (70 / 500) * windowHeight && mouseY < (90 / 500) * windowHeight) { scaler2 = 10 }
+  //button 3
+  if (mouseX > (660 / 800) * windowWidth && mouseX < (680 / 800) * windowWidth && mouseY > (120 / 500) * windowHeight && mouseY < (140 / 500) * windowHeight) { scaler3 = 10 }
   //click interaction
-  if (mouseX > 660 && mouseX < 680 && mouseY > 20 && mouseY < 40 && mouseIsPressed) {
+  if (mouseX > (660 / 800) * windowWidth && mouseX < (680 / 800) * windowWidth && mouseY > (20 / 500) * windowHeight && mouseY < (40 / 500) * windowHeight && mouseIsPressed) {
     scaler1 = 0
     paintbrush = 1
   }
-  if (mouseX > 660 && mouseX < 680 && mouseY > 70 && mouseY < 90 && mouseIsPressed) {
+  if (mouseX > (660 / 800) * windowWidth && mouseX < (680 / 800) * windowWidth && mouseY > (70 / 500) * windowHeight && mouseY < (90 / 500) * windowHeight && mouseIsPressed) {
     scaler2 = 0
     paintbrush = 2
   }
-  if (mouseX > 660 && mouseX < 680 && mouseY > 120 && mouseY < 140 && mouseIsPressed) {
+  if (mouseX > (660 / 800) * windowWidth && mouseX < (680 / 800) * windowWidth && mouseY > (120 / 500) * windowHeight && mouseY < (140 / 500) * windowHeight && mouseIsPressed) {
     scaler3 = 0
     paintbrush = 3
   }
@@ -239,46 +263,52 @@ function draw() {
   fill(255)
   stroke(236, 246, 148)
   strokeWeight(rectstroke)
-  rect(670, 30, scaler1 + 20, scaler1 + 20)
+  rect((670 / 800) * windowWidth, (30 / 500) * windowHeight, scaler1 + 20, scaler1 + 20)
 
   //flower
   stroke(255, 131, 175)
   strokeWeight(flowerstroke)
-  rect(670, 80, scaler2 + 20, scaler2 + 20)
+  rect((670 / 800) * windowWidth, (80 / 500) * windowHeight, scaler2 + 20, scaler2 + 20)
 
   //triangle
   stroke(145, 220, 255)
   strokeWeight(trianglestroke)
-  rect(670, 130, scaler3 + 20, scaler3 + 20)
+  rect((670 / 800) * windowWidth, (130 / 500) * windowHeight, scaler3 + 20, scaler3 + 20)
   pop()
+
   //brush button text
   fill(255)
-  text("Flat Brush", 695, 35)
-  text("Floral Brush", 695, 85)
-  text("Triangle Brush", 695, 135)
+  text("Flat Brush", (695 / 800) * windowWidth, (35 / 500) * windowHeight)
+  text("Flower Brush", (695 / 800) * windowWidth, (85 / 500) * windowHeight)
+  text("Sharp Brush", (695 / 800) * windowWidth, (135 / 500) * windowHeight)
 
-  //pitch scale for flower brush
+  //flower sizing scale
   push()
   rectMode(CENTER)
   fill(255)
-  rect(670, 300, 10, 200)
+  rect((670 / 800) * windowWidth, (300 / 500) * windowHeight, 10, 200)
 
   fill(255, 131, 175)
-  rect(670, 400 - rectpitch, 40, 15);
-
+  rect((670 / 800) * windowWidth, (300 / 500) * windowHeight + 100 - rectpitch, 40, 15);
   pop()
 
-  //rectangle brush size scale 
-  rectanglesizer = constrain(rectanglesizer, 200, 400)
-  if (mouseIsPressed && mouseX > 700 && mouseX < 740 && mouseY > rectanglesizer - 15 / 2 && mouseY < rectanglesizer + 15 / 2) {
-    rectanglesizer = mouseY
+  //rectangle brush size scale
+  rectanglesizer = constrain(rectanglesizer, 0, ((3 / 5) * windowHeight + 200) - ((3 / 5) * windowHeight - 200))
+
+  //ry = (300 / 500) * windowHeight + 100 - rectanglesizer;
+  if (dragRect) {
+    ry = mouseY
+    ry = constrain(ry, (300 / 500) * windowHeight - 100, (300 / 500) * windowHeight + 100)
+  }
+  if (mouseIsPressed && mouseX > rx - 20 && mouseX < rx + 20 && mouseY > ry - (15 / 2) && mouseY < ry + 15 / 2) {
+    dragRect = true;
   }
   push()
   rectMode(CENTER)
-  rect(720, 300, 10, 200)
+  rect((720 / 800) * windowWidth, (300 / 500) * windowHeight, 10, 200)
 
   fill(236, 246, 148)
-  rect(720, rectanglesizer, 40, 15);
+  rect(rx, ry, 40, 15);
   pop()
 
   //triangle sizer
@@ -296,29 +326,29 @@ function draw() {
   strokeWeight(strokesize1)
   stroke(145, 220, 255)
   fill(255)
-  rect(770, 210, 20, 20)
+  rect((770 / 800) * windowWidth, (210 / 500) * windowHeight, 20, 20)
   noStroke()
   fill(0)
   textSize(15)
-  text("1", 770, 210)
+  text("1", (770 / 800) * windowWidth, (210 / 500) * windowHeight)
 
   strokeWeight(strokesize2)
   stroke(145, 220, 255)
   fill(255)
-  rect(770, 300, 20, 20)
+  rect((770 / 800) * windowWidth, (300 / 500) * windowHeight, 20, 20)
   noStroke()
   fill(0)
   textSize(15)
-  text("2", 770, 300)
+  text("2", (770 / 800) * windowWidth, (300 / 500) * windowHeight)
 
   strokeWeight(strokesize3)
   stroke(145, 220, 255)
   fill(255)
-  rect(770, 390, 20, 20)
+  rect((770 / 800) * windowWidth, (390 / 500) * windowHeight, 20, 20)
   noStroke()
   fill(0)
   textSize(15)
-  text("3", 770, 390)
+  text("3", (770 / 800) * windowWidth, (390 / 500) * windowHeight)
   pop()
 
   //clear sketch button
@@ -326,27 +356,26 @@ function draw() {
   rectMode(CENTER)
   //hover interaction
   let scaler4 = 0
-  if (mouseX > 650 && mouseX < 740 && mouseY > 440 && mouseY < 480) {
+  if (mouseX > (650 / 800) * windowWidth && mouseX < (740 / 800) * windowWidth && mouseY > (440 / 500) * windowHeight && mouseY < (480 / 500) * windowHeight) {
     scaler4 = 10
   }
   //click interaction
-  if (mouseX > 650 && mouseX < 740 && mouseY > 440 && mouseY < 480 && mouseIsPressed) {
+  if (mouseX > (650 / 800) * windowWidth && mouseX < (740 / 800) * windowWidth && mouseY > (440 / 500) * windowHeight && mouseY < (480 / 500) * windowHeight && mouseIsPressed) {
     scaler4 = 0
   }
   //actual clear button
   fill(255, 0, 0)
-  rect(695, 460, scaler4 + 90, scaler4 + 40)
+  rect((695 / 800) * windowWidth, (460 / 500) * windowHeight, scaler4 + 90, scaler4 + 40)
   fill(255)
   textAlign(CENTER, CENTER)
   let scaler5 = 15
   if (scaler4 == 10) { scaler5 = 20 }
   textSize(scaler5)
-  text("CLEAR SKETCH", 695, 460, scaler4 + 90, scaler4 + 40)
+  text("CLEAR SKETCH", (695 / 800) * windowWidth, (460 / 500) * windowHeight, scaler4 + 90, scaler4 + 40)
   pop()
 
   //clear function
-  if (mouseX > 650 && mouseX < 740 && mouseY > 440 && mouseY < 480 && mouseIsPressed) {
-
+  if (mouseX > (650 / 800) * windowWidth && mouseX < (740 / 800) * windowWidth && mouseY > (440 / 500) * windowHeight && mouseY < (480 / 500) * windowHeight && mouseIsPressed) {
     life = 0
   } else { life = 15000 }
 
@@ -357,64 +386,24 @@ function draw() {
   colorMode(HSB, 100)
   noFill()
   stroke(255, 0, 100)
-  rect(775, 470, 40, 20)
-  text("info", 775, 470)
-
+  rect((775 / 800) * windowWidth, (470 / 500) * windowHeight, 40, 20)
+  text("info", (775 / 800) * windowWidth, (470 / 500) * windowHeight)
 
   //info hover
-  if (mouseX > 755 && mouseX < 795 && mouseY > 460 && mouseY < 480) {
-    for (let x = 70; x <= 570; x += 5) {
-      let color = map(x, 70, 570, 0, 100)
+  if (mouseX > (775 / 800) * windowWidth - 20 && mouseX < (775 / 800) * windowWidth + 20 && mouseY > (470 / 500) * windowHeight - 10 && mouseY < (470 / 500) * windowHeight + 10) {
+    for (let x = (1 / 5) * windowWidth; x <= (3 / 5) * windowWidth; x += 5) {
+      let color = map(x, (1 / 5) * windowWidth, (3 / 5) * windowWidth, 0, 100)
       fill(color, 50, 100)
       noStroke()
-      rect(x, 480 / 2, 5, 100)
+      rect(x, (12 / 25) * windowHeight, 5, 100)
     }
     //rect(640 / 2, 480 / 2, 500, 100)
     fill(0)
-    text("You all have lost touch with what it means to be human. Creation comes from you. Reclaim your humanity. You are connected to the art you create, don't worry about perfection or skill, just put something on the page. Alter the shape and size of your brush with your voice, your hands, and interacting with the interface of the program", 640 / 2, 480 / 2, 500, 100)
+    text("You all have lost touch with what it means to be human. Creation comes from you. Reclaim your humanity. You are connected to the art you create, don't worry about perfection or skill, just put something on the page and bring back color and vibrance into your lives. Each brush has its own color coresponding sizer, use your voice to change the flower, use your mouse to drag the yellow scale to change the rectanlge, and make numbers 1,2, or 3 to alternate triangle brush sizes.", (2 / 5) * windowWidth, (12 / 25) * windowHeight, 500, 100)
   }
   pop()
-
-  // //hands
-  // // Draw all the tracked hand points
-  // for (let i = 0; i < hands.length; i++) {
-  //   push()
-  //   let hand = hands[i];
-  //   let p0 = hand.keypoints[0] //base of palm
-  //   let pk1 = hand.keypoints[10] //first knuckle of middle finger
-  //   let pk2 = hand.keypoints[14] // first knuckle of ring finger 
-  //   let p1 = hand.keypoints[4] //thumb tip
-  //   let p2 = hand.keypoints[8] //index tip 
-  //   let p3 = hand.keypoints[12] //middle tip 
-  //   let p4 = hand.keypoints[16] //ring tip 
-  //   let p5 = hand.keypoints[20] //pinky tip 
-  //   stroke(255, 0, 0);
-  //   strokeWeight(5)
-  //   // line(p3.x, p3.y, p0.x, p0.y); // middle
-  //   // line(p4.x, p4.y, p0.x, p0.y); // ring
-  //   // line(p5.x, p5.y, p0.x, p0.y); // pinky
-  //   // line(p1.x, p1.y, pk2.x, pk2.y) // thumb to knuckle
-  //   // line(p2.x, p2.y, p0.x, p0.y) // index to base
-
-  //   let index1 = dist(p2.x, p2.y, p0.x, p0.y) // index tip to palm of base 
-  //   let mid1 = dist(p3.x, p3.y, p0.x, p0.y); // middle tip to palm base 
-  //   let ring1 = dist(p4.x, p4.y, p0.x, p0.y); // ringtip to palm base 
-  //   let pink1 = dist(p5.x, p5.y, p0.x, p0.y); // pinky tip to palm base 
-  //   let tk1 = dist(p1.x, p1.y, pk1.x, pk1.y) // thumb tip to middle knuckle 
-  //   let tk2 = dist(p1.x, p1.y, pk2.x, pk2.y) // thumb tip to ring knuckle 
-  //   let tp = dist(p1.x, p1.y, p5.x, p5.y) // thumb tip to pinky 
-
-  //   if (mid1 < 75 && ring1 < 45 && pink1 < 50 && tk1 < 15 && index1 > 215) {
-  //     handnumber = 1
-  //   }
-  //   if (index1 > 200 && mid1 > 200 && ring1 < 55 && pink1 < 50 && tk2 < 15) {
-  //     handnumber = 2
-  //   }
-  //   if (index1 > 195 && mid1 > 195 && ring1 > 180 && tp < 12) {
-  //     handnumber = 3
-  //   }
-  //   pop()
-  // }
+  //console.log(handnumber)
+  HandSignals()
 }
 
 //rectangle brush
@@ -430,7 +419,6 @@ class brush1 {
     this.born = millis()
   }
   display() {
-
     push()
     angleMode(RADIANS);
     translate(this.x, this.y)
@@ -495,7 +483,7 @@ class brush3 {
     this.hyp = hyp
     this.angle = 0
     this.anglebaby = 0
-    this.color = image.get(video.width - mouseX, mouseY);
+    this.color = video.get(video.width - mouseX, mouseY);
     this.born = millis()
   }
   display() {
@@ -539,6 +527,7 @@ class brush3 {
     return millis() - this.born > life
   }
 }
+
 
 
 

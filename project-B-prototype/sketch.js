@@ -173,7 +173,7 @@ function draw() {
   text("CLEAR SKETCH", 695, 460, scaler4 + 90, scaler4 + 40)
   pop()
 
-  //rect moving up and down
+  //flower sizing
   push()
   rectMode(CENTER)
   fill(255)
@@ -184,7 +184,7 @@ function draw() {
 
   pop()
 
-  //rectangle brush size scale - done, how can i make it easier to use
+  //rectangle brush size scale
   rectanglesizer = constrain(rectanglesizer, 200, 400)
   if (mouseIsPressed && mouseX > 700 && mouseX < 740 && mouseY > rectanglesizer - 15 / 2 && mouseY < rectanglesizer + 15 / 2) {
     rectanglesizer = mouseY
