@@ -284,6 +284,10 @@ function draw() {
 
   //flower sizing scale
   push()
+  textAlign(CENTER, CENTER)
+  text("voice", (670 / 800) * windowWidth, (210 / 500) * windowHeight - 30)
+  pop()
+  push()
   rectMode(CENTER)
   fill(255)
   rect((670 / 800) * windowWidth, (300 / 500) * windowHeight, 10, 200)
@@ -293,6 +297,10 @@ function draw() {
   pop()
 
   //rectangle brush size scale
+  push()
+  textAlign(CENTER, CENTER)
+  text("mouse", (720 / 800) * windowWidth, (210 / 500) * windowHeight - 30)
+  pop()
   rectanglesizer = constrain(rectanglesizer, 0, ((3 / 5) * windowHeight + 200) - ((3 / 5) * windowHeight - 200))
 
   //ry = (300 / 500) * windowHeight + 100 - rectanglesizer;
@@ -323,6 +331,10 @@ function draw() {
   if (handnumber == 3) { strokesize3 = 5 } else { strokesize3 = 0 }
 
   //handsign indicators 1, 2, 3
+  push()
+  textAlign(CENTER)
+  text("hand signals", (770 / 800) * windowWidth, (210 / 500) * windowHeight - 30)
+  pop()
   strokeWeight(strokesize1)
   stroke(145, 220, 255)
   fill(255)
@@ -399,7 +411,7 @@ function draw() {
     }
     //rect(640 / 2, 480 / 2, 500, 100)
     fill(0)
-    text("You all have lost touch with what it means to be human. Creation comes from you. Reclaim your humanity. You are connected to the art you create, don't worry about perfection or skill, just put something on the page and bring back color and vibrance into your lives. Each brush has its own color coresponding sizer, use your voice to change the flower, use your mouse to drag the yellow scale to change the rectanlge, and make numbers 1,2, or 3 to alternate triangle brush sizes.", (2 / 5) * windowWidth, (12 / 25) * windowHeight, 500, 100)
+    text("You all have lost touch with what it means to be human. Creation comes from you. Reclaim your humanity. You are connected to the art you create, don't worry about perfection or skill, just put something on the page and bring back color and vibrance into your lives. Each brush has its own color coresponding sizer, use your voice to change the flower, use your mouse to drag the yellow scale to change the rectanlge, and make numbers 1,2, or 3 with your hand to alternate triangle brush sizes.", (2 / 5) * windowWidth, (12 / 25) * windowHeight, 500, 100)
   }
   pop()
   //console.log(handnumber)
