@@ -34,11 +34,12 @@ function setup() {
   let canvas = createCanvas(windowWidth, windowHeight);
   canvas.id("p5-canvas");
   canvas.parent("p5-canvas-container");
+  getAudioContext().suspend();
 
   //use camera and hide image
   mic = new p5.AudioIn();
   mic.start();
-  fft = new p5.FFT()
+  fft = fft = new p5.FFT(0.8, 16)
   fft.setInput(mic)
 
   //use videoera and hide image
@@ -141,6 +142,7 @@ function drawShape(shape, a) {
 }
 function mousePressed() {
   a = shape.length;
+  userStartAudio();
 }
 function mouseReleased() {
   dragRect = false;
