@@ -305,7 +305,6 @@ function draw() {
   pop()
   rectanglesizer = constrain(rectanglesizer, 0, ((3 / 5) * windowHeight + 200) - ((3 / 5) * windowHeight - 200))
 
-  //ry = (300 / 500) * windowHeight + 100 - rectanglesizer;
   if (dragRect) {
     ry = mouseY
     ry = constrain(ry, (300 / 500) * windowHeight - 100, (300 / 500) * windowHeight + 100)
